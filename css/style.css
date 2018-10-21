@@ -15,5 +15,8 @@ body {
 .header {
   width:85%;
   margin:auto;
-  margin-bottom: 3em;
+  margin-bottom: 3.5em;
 }
+
+.center {
+    text-align: center;
