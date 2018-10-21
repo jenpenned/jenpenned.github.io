@@ -1,0 +1,13 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-family: Open Sans, sans-serif;
+    font-size: 100%;
+    color: rgb(60, 60, 60);
+    background: #fff;
+    width: 100%;
+    margin-bottom: 100px;
+}
