@@ -6,8 +6,14 @@ html {
 body {
     font-family: Open Sans, sans-serif;
     font-size: 100%;
-    color: rgb(60, 60, 60);
-    background: #fff;
+    color: #000000;
+    background: #ffffff;
     width: 100%;
     margin-bottom: 100px;
+}
+
+.header {
+  width:85%;
+  margin:auto;
+  margin-bottom: 3em;
 }
