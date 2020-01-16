@@ -1,0 +1,663 @@
+---
+title: "Newsom analysis"
+author: "Jen"
+date: "1/3/2020"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+  md_document:
+    variant: markdown_github
+  pdf_document:
+    toc: yes
+---
+
+
+```{r libraries, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(lubridate)
+library(DT)
+library(knitr)
+```
+
+
+```{r formatting, include = FALSE}
+# This reads in tweet dataframes, formats it to include governor handle information, and trims the dates the tweets were created to the timeframe we are interested in (2019-03-01 to 2019-12-31)
+
+## read in all the tweets, including the latest batch of updates
+all = Sys.glob('data/everything-*.csv') %>% 
+  sort(decreasing = TRUE) %>% 
+  `[`(1)
+
+everything <- read_csv(all, guess_max = 50000)
+
+## format the tweets to the governor information
+govHandles <- read_csv("data/govHandles2.csv")
+
+## joining the tweets data in everything to govHandles so there's governors' handles information 
+formatted_everything = govHandles %>% 
+  full_join(everything, by = 'screen_name') %>% 
+  filter(created_at >= make_date(2019, 3, 1), created_at <  make_date(2020, 1, 1))
+
+
+## pull in FB analysis as well
+df <- read_csv("data_old/NewsomFacebookLatest_working.csv")
+
+NewsomFB = df %>% 
+  # select(reactions, shares, comments) %>% 
+  mutate(
+    reactions_cleaned = str_replace(reactions, 'K', ''),
+    reactions_cleaned = parse_double(reactions_cleaned),
+    reactions_cleaned = if_else(
+      str_detect(reactions, 'K'),
+      reactions_cleaned * 1000,
+      reactions_cleaned),
+    shares_cleaned = str_replace(shares, 'K', ''),
+    shares_cleaned = parse_double(shares_cleaned),
+    shares_cleaned = if_else(
+      str_detect(shares, 'K'),
+      shares_cleaned * 1000,
+      shares_cleaned),
+    comments_cleaned = str_replace(comments, 'K', ''),
+    comments_cleaned = parse_double(comments_cleaned),
+    comments_cleaned = if_else(
+      str_detect(comments, 'K'),
+      comments_cleaned* 100,
+      comments_cleaned)
+    )
+
+```
+
+## Topline numbers
+
+**How Newsom ranks by number of Tweets between 3-01-2019 and 12-31-2019**
+
+* compared to other governors' personal accounts: **@GavinNewsom ranked 5th**
+
+* compared to other governors' personal OR official accounts: **@GavinNewsom ranked 14th (his official account ranked 8th)**
+
+* compared to tweets from other governors' personal AND official accounts: **Newsom/CA ranked 2nd**  
+
+
+**How Newsom ranks vs other governors when tweeting about Trump**
+
+* compared to other governors' personal accounts: **@GavinNewsom ranked 3rd**
+
+* compared to other governors' personal OR official accounts: **@GavinNewsom ranked 3rd (his official account ranked 5th)** 
+
+* compared to tweets from other governors' personal AND official accounts: **Newsom/CA ranked 3rd** 
+
+	
+	
+## An analysis of Governor Gavin Newsom's tweeting habits
+
+Gavin Newsom is California's first social media governor. He has the distinction of being the most followed U.S. governor on Twitter -- by a lot. 
+
+```{r followers, echo=FALSE}
+
+## who has the most followers right now (since I ran govHandles as of Dec 12)
+## Newsom (@GavinNewsom) has the most followers, by a lot (1,474,011 followers total)
+## his official account, @CAgovernor, has less than a tenth the number of followers (111,269)
+formatted_everything %>%
+  distinct(name = name.x, screen_name, followers_count = followers_count.x) %>%
+  arrange(desc(followers_count)) %>%
+  datatable()
+```
+
+So we decided to learn more about Newsom's tweeting habits.
+
+We used a Twitter API to collect tweets from all U.S. governors' accounts, official and personal, between March 1 and December 31, 2019. This is as far back as we could go using the API and still analyze a complete set of governors' tweets. We were able to collect older tweets going back to January 1, 2017 for Gavin Newsom's personal account.  
+
+We studied Governor Newsom's tweeting habits--how he tweets between his two accounts and compared to other U.S. Governors. Here's what we found:
+
+## Newsom's tweeting habits
+
+Gavin Newsom has two accounts: an official account, @CAgovernor, and a personal account, @GavinNewsom. 
+
+```{r newsom_prep, include = FALSE}
+
+newsomTweets = everything %>% 
+  filter(screen_name == "GavinNewsom" | screen_name == "CAgovernor") %>%
+  filter(created_at >= make_date(2017, 1, 1))
+```
+
+#### Which @GavinNewsom tweets received the most likes in the past 3 years?
+
+``` {r newsom_favorite, echo = FALSE}
+
+favorite_newsom = newsomTweets %>%
+  select(created_at, screen_name, text, favorite_count) %>% 
+  filter(screen_name == "GavinNewsom") %>%
+  arrange(desc(favorite_count))
+
+favorite_newsom
+```
+
+#### Which Gavin Newsom FB post had the most reactions (*unlike Twitter likes, the reactions can also be negative) in the past year?
+
+``` {r newsom_reaction_FB, echo = FALSE}
+
+most_reactions = NewsomFB %>% 
+  select(date, text, reactions_cleaned, shares_cleaned, comments_cleaned) %>% 
+  arrange(desc(reactions_cleaned)) %>% 
+  head(10)
+
+most_reactions
+```
+
+He has far more audience engagement from Twitter likes than Facebook reactions.
+
+#### Which @GavinNewsom tweets were retweeted the most?
+
+``` {r newsom_retweet, echo = FALSE}
+
+retweet_newsom = newsomTweets %>%
+  select(created_at, screen_name, text, retweet_count) %>% 
+  filter(screen_name == "GavinNewsom") %>% 
+  arrange(desc(retweet_count))
+
+retweet_newsom
+```
+
+#### How does that compare to Gavin's most shared Facebook posts?
+
+``` {r newsom_shares_FB, echo = FALSE}
+
+most_shares = NewsomFB %>% 
+  select(date,text, shares_cleaned, reactions_cleaned, comments_cleaned) %>% 
+  arrange(desc(shares_cleaned)) %>% 
+  head(10)
+
+most_shares
+```
+Gavin Newsom also has more audience engagement from Twitter retweets than from Facebook shares. 
+
+* reply count data not available without Premium and Enterprise tier
+
+#### Which Twitter users does @GavinNewsom reply to the most?
+```{r newsom_reply, echo = FALSE}
+newsom_reply = newsomTweets %>% 
+  filter(screen_name == "GavinNewsom") %>% 
+  group_by(reply_to_screen_name) %>% 
+  count() %>% 
+  arrange(desc(n))
+
+newsom_reply
+```
+* @yldja's Twitter bio reads, ["The OC, state of Commiefornia"] (https://twitter.com/yldja)
+
+#### Which Twitter users does @GavinNewsom mention the most?
+```{r newsom_mentions, echo = FALSE}
+newsom_mentions = newsomTweets %>% 
+  filter(screen_name == "GavinNewsom") %>% 
+  group_by(mentions_screen_name) %>% 
+  count() %>% 
+  arrange(desc(n))
+
+newsom_mentions
+```
+*[@JenSiebelNewsom is Gavin Newsom's wife] (https://twitter.com/JenSiebelNewsom)
+
+#### What are @GavinNewsom's favorite hashtags? (He doesn't use many)
+
+```{r newsom_hashtag, echo = FALSE}
+newsom_hashtag = newsomTweets %>%
+  filter(screen_name == "GavinNewsom") %>% 
+  group_by(screen_name, hashtags) %>% 
+  count() %>% 
+  arrange(desc(n))
+
+newsom_hashtag
+```
+
+#### By comparison, theses are Gavin Newsom's official account's favorite hashtags:
+
+```{r CAgov_hashtag, echo = FALSE}
+CAgov_hashtag = newsomTweets %>%
+  filter(screen_name == "CAgovernor") %>% 
+  group_by(screen_name, hashtags) %>% 
+  count() %>% 
+  arrange(desc(n))
+
+CAgov_hashtag
+```
+
+We graphed the number of tweets Gavin Newsom posted each month from each of his accounts. He tweets more overall from his official account, @CAGovernor, which is run by his staff.
+
+```{r newsom, echo = FALSE}
+
+Newsom_month = newsomTweets %>% 
+  group_by(screen_name, created_month = floor_date(created_at, "month")) %>% 
+  count()
+
+Newsom_month %>% 
+  filter(created_month < as.Date('2020-01-01')) %>% 
+  ggplot(aes(created_month, n, color = screen_name)) +
+  geom_point() +
+  geom_line() +
+  # Legend title
+  scale_color_discrete(name = "Twitter handles") +
+  labs(title = "Gavin Newsom's Twitter habits",
+  subtitle = "",
+  x = "",
+  y = "number of tweets",
+  caption = "Sourceline") +
+  # Chart style
+  theme(
+    text=element_text(size=12),
+    #title
+    plot.title = element_text(
+      size = 18,
+      #hjust = 0.5,
+      lineheight = 1.2
+    ),
+  # remove default grid
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank(),
+  # caption
+  # x-axis ticks
+  axis.ticks.x = element_line(
+     color = "#a7a9ac"
+  ),
+  # y-axis ticks
+  axis.ticks.y = element_blank(),
+  panel.grid.major.y =  element_line(
+    color = "#a7a9ac",
+    linetype = 3,
+    lineend = "butt"
+  )
+)
+
+```
+
+However, Newsom's personal account mentions Trump more often, either directly via @DonaldJTrump or without Trump's handle, than his official account.
+
+```{r newsom_trump, echo=FALSE}
+
+## filter for Newsom tweets from both accounts, tweeted on or after 2017-01-01
+
+
+## filter for tweets that mention Trump
+trumpNewsom = newsomTweets %>% 
+  mutate(mentions_trump = str_detect(str_to_lower(text), 'trump'),
+         mentions_family = str_detect(text, paste(c("IvankaTrump", "Ivanka Trump", "EricTrump", "DonaldJTrumpJr"), collapse = "|"))) %>%
+  filter(mentions_trump, !mentions_family)
+#datatable(trumpNewsom)
+
+## group Trump mentions by account by month
+Newsom_trump_month = trumpNewsom %>% 
+  group_by(screen_name, created_month = floor_date(created_at, "month")) %>% 
+  count()
+
+## graph it
+Newsom_trump_month %>% 
+  filter(created_month < as.Date('2020-01-01')) %>% 
+  ggplot(aes(created_month, n, color = screen_name)) +
+  geom_point() +
+  geom_line() +
+  # Legend title
+  scale_color_discrete(name = "Twitter handles") +
+  labs(title = "Gavin Newsom's Twitter habits when it comes to Trump",
+  subtitle = "",
+  x = "",
+  y = "number of tweets that mention Trump",
+  caption = "Sourceline") +
+  # Chart style
+  theme(
+    text=element_text(size=12),
+    #title
+    plot.title = element_text(
+      size = 18,
+      #hjust = 0.5,
+      lineheight = 1.2
+    ),
+  # remove default grid
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank(),
+  # caption
+  # x-axis ticks
+  axis.ticks.x = element_line(
+     color = "#a7a9ac"
+  ),
+  # y-axis ticks
+  axis.ticks.y = element_blank(),
+  panel.grid.major.y =  element_line(
+    color = "#a7a9ac",
+    linetype = 3,
+    lineend = "butt"
+  )
+)
+
+```
+
+Gavin Newsom also tweets more frequently about Trump from his personal account.
+
+```{r Newsom_frequency, echo= FALSE}
+Newsom_month %>% 
+  rename(all_tweets = n) %>% 
+  full_join(Newsom_trump_month, by = c('screen_name', 'created_month')) %>% 
+  mutate(frequency = round(frequency = n/all_tweets*100)) %>%
+  filter(created_month > as.Date('2019-01-01') & created_month < as.Date('2020-01-01')) %>%
+  ggplot(aes(created_month, frequency, color = screen_name)) +
+  geom_line() +
+  theme_minimal() +
+  # Legend title
+  scale_color_discrete(name = "Twitter handles") +
+  labs(title = "What percent of Gavin Newsom's tweets mention Trump?",
+  subtitle = "",
+  x = "",
+  y = "percent",
+  caption = "Sourceline") +
+  # Chart style
+  theme(
+    text=element_text(size=12),
+    #title
+    plot.title = element_text(
+      size = 18,
+      #hjust = 0.5,
+      lineheight = 1.2
+    ),
+  # remove default grid
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank(),
+  # caption
+  # x-axis ticks
+  axis.ticks.x = element_line(
+     color = "#a7a9ac"
+  ),
+  # y-axis ticks
+  axis.ticks.y = element_blank(),
+  panel.grid.major.y =  element_line(
+    color = "#a7a9ac",
+    linetype = 3,
+    lineend = "butt"
+  )
+)
+
+
+```
+
+## How does Gavin Newsom's Twitter habits compare to other U.S. governors?
+
+For this analysis, we looked at a 10-month time period between 03-01-2019 and 12-31-2019, which is as far back as we could go using the Twitter API and still gather a full set of data for all U.S. govenors.
+
+Gavin Newsom's personal account ranks 5th in number of tweets compared to other governors' personal Twitter account. 
+
+```{r governors_personal, echo = FALSE}
+personal_tweets = formatted_everything %>% 
+  filter(personal) %>% 
+  group_by(name.x, screen_name) %>% 
+  summarize(tweets = n()) %>% 
+  arrange(desc(tweets))
+datatable(personal_tweets)
+```
+
+Gavin Newsom's personal account ranks 14th in number of tweets compared to other governors' personal or official Twitter acounts. He is outpaced by his official account, @CAgovenor, which has tweeted 1.7 times as much in this same time period.
+ 
+```{r governors_distinct, echo=FALSE}
+total_tweets = formatted_everything %>% 
+  group_by(name, screen_name) %>%
+  summarize(tweets = n()) %>%
+  arrange(desc(tweets))
+datatable(total_tweets)
+```
+
+And if we looked at which governor tweeted the most overall (from their official and personal accounts), Newsom becomes the second most prolific governor on Twitter in this time period. 
+
+```{r governors_combined, echo=FALSE}
+combined_total = formatted_everything %>% 
+  group_by(state) %>%
+  summarize(tweets = n()) %>%
+  arrange(desc(tweets))
+datatable(combined_total)
+```
+
+Now let's look at which governor tweeted the most to or about Trump in this same time period.
+
+If we looked at only governors' personal Twitter accounts, Gavin Newsom ranks third in Trump-related tweets.
+
+```{r Trump_personal, echo = FALSE}
+
+percent_trump_personal = formatted_everything %>% 
+  mutate(
+    mentions_trump = str_detect(str_to_lower(text), 'trump'),
+    mentions_family = str_detect(text, paste(c("IvankaTrump", "Ivanka Trump", "EricTrump", "DonaldJTrumpJr"), collapse = "|"))) %>% 
+  filter(mentions_trump, !mentions_family, personal) %>% 
+  group_by(screen_name) %>% 
+  summarize(trump_tweets = n())%>% 
+  full_join(personal_tweets, by = "screen_name") %>% 
+  mutate(
+    trump_tweets = replace_na(trump_tweets, 0),
+    frequency_trump_tweets = trump_tweets/tweets*100) %>% 
+  arrange(desc(trump_tweets))
+datatable(percent_trump_personal)
+```
+
+This is what it looks like visually:
+
+```{r chart_trump_personal, echo = FALSE}
+
+top10trumpaccounts4 = percent_trump_personal %>% 
+  ungroup() %>% 
+  select(screen_name, trump_tweets) %>% 
+  head(10)
+
+#top10trumpaccounts4 %>%arrange(desc(trump_tweets))
+
+trumptweetstop10order4 = formatted_everything %>%
+  select(screen_name, created_at, text) %>% 
+  mutate(
+    mentions_trump = str_detect(str_to_lower(text), 'trump'),
+    mentions_family = str_detect(text, paste(c("IvankaTrump", "Ivanka Trump", "EricTrump", "DonaldJTrumpJr"), collapse = "|"))
+  ) %>% 
+  filter(mentions_trump, !mentions_family) %>% 
+  filter(screen_name %in% top10trumpaccounts4$screen_name) %>% 
+  select(screen_name, created_at) %>% 
+  group_by(screen_name) %>% 
+  mutate(tweetorder = rank(created_at))
+
+trumptweetstop10order4 %>% 
+  ggplot(aes(created_at, tweetorder, color = screen_name)) +
+  geom_line() +
+  theme_minimal()+
+  # Legend title
+  scale_color_discrete(name = "Twitter handles") +
+  labs(title = "Tweeting patterns of the top 10 governors' personal accounts that mention Trump",
+  subtitle = "by personal account",
+  x = "",
+  y = "number of tweets that mention Trump",
+  caption = "Sourceline") +
+  # Chart style
+  theme(
+    text=element_text(size=12),
+    #title
+    plot.title = element_text(
+      size = 18,
+      #hjust = 0.5,
+      lineheight = 1.2
+    ),
+  # remove default grid
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank(),
+  # caption
+  # x-axis ticks
+  axis.ticks.x = element_line(
+     color = "#a7a9ac"
+  ),
+  # y-axis ticks
+  axis.ticks.y = element_blank(),
+  panel.grid.major.y =  element_line(
+    color = "#a7a9ac",
+    linetype = 3,
+    lineend = "butt"
+  )
+)
+```
+
+If we considered which governors' personal or official Twitter account tweeted the most about Trump, Gavin Newsom;s personal account still ranks third. His official account ranks fifth.
+
+```{r Trump_distinct, echo=FALSE}
+percent_trump = formatted_everything %>% 
+  mutate(
+    mentions_trump = str_detect(str_to_lower(text), 'trump'),
+    mentions_family = str_detect(text, paste(c("IvankaTrump", "Ivanka Trump", "EricTrump", "DonaldJTrumpJr"), collapse = "|"))) %>% 
+  filter(mentions_trump, !mentions_family) %>% 
+  group_by(screen_name) %>% 
+  summarize(trump_tweets = n()) %>% 
+  full_join(total_tweets, by = "screen_name") %>% 
+  mutate(
+    trump_tweets = replace_na(trump_tweets, 0),
+    frequency_trump_tweets = trump_tweets/tweets*100) %>% 
+  arrange(desc(trump_tweets))
+datatable(percent_trump)
+```
+
+Here's what that looks like visually:
+
+```{r chart_trump_distinct, echo=FALSE}
+top10trumpaccounts = percent_trump %>% 
+  ungroup() %>% 
+  select(screen_name, trump_tweets) %>% 
+  head(10)
+
+#top10trumpaccounts %>% arrange(desc(trump_tweets))
+
+trumptweetstop10order = formatted_everything %>%
+  select(screen_name, created_at, text) %>% 
+  mutate(
+    mentions_trump = str_detect(str_to_lower(text), 'trump'),
+    mentions_family = str_detect(text, paste(c("IvankaTrump", "Ivanka Trump", "EricTrump", "DonaldJTrumpJr"), collapse = "|"))
+  ) %>% 
+  filter(mentions_trump, !mentions_family) %>% 
+  filter(screen_name %in% top10trumpaccounts$screen_name) %>% 
+  select(screen_name, created_at) %>% 
+  group_by(screen_name) %>% 
+  mutate(tweetorder = rank(created_at))
+
+#trumptweetstop10order
+
+trumptweetstop10order %>% 
+  ggplot(aes(created_at, tweetorder, color = screen_name)) +
+  geom_line() +
+  theme_minimal() +
+  # Legend title
+  scale_color_discrete(name = "Twitter handles") +
+  labs(title = "Tweeting patterns of the top 10 governors' accounts that mention Trump",
+  subtitle = "based on their official or personal account",
+  x = "",
+  y = "number of tweets that mention Trump",
+  caption = "Sourceline") +
+  # Chart style
+  theme(
+    text=element_text(size=12),
+    #title
+    plot.title = element_text(
+      size = 18,
+      #hjust = 0.5,
+      lineheight = 1.2
+    ),
+  # remove default grid
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank(),
+  # caption
+  # x-axis ticks
+  axis.ticks.x = element_line(
+     color = "#a7a9ac"
+  ),
+  # y-axis ticks
+  axis.ticks.y = element_blank(),
+  panel.grid.major.y =  element_line(
+    color = "#a7a9ac",
+    linetype = 3,
+    lineend = "butt"
+  )
+)
+```
+
+If we considered which governor tweeted about Trump from their official and pesonal accounts, Gavin Newsom still ranks third overall.
+
+```{r Trump_combined, echo=FALSE} 
+percent_trump_combined = formatted_everything %>% 
+  mutate(
+    mentions_trump = str_detect(str_to_lower(text), 'trump'),
+    mentions_family = str_detect(text, paste(c("IvankaTrump", "Ivanka Trump", "EricTrump", "DonaldJTrumpJr"), collapse = "|"))) %>% 
+  filter(mentions_trump, !mentions_family) %>% 
+  group_by(state) %>% 
+  summarize(trump_tweets = n())%>% 
+  full_join(combined_total, by = "state") %>% 
+  mutate(
+    trump_tweets = replace_na(trump_tweets, 0),
+    frequency_trump_tweets = trump_tweets/tweets*100) %>% 
+  arrange(desc(trump_tweets))
+datatable(percent_trump_combined)
+```
+
+Here's what that looks like visually:
+
+```{r chart_trump_combined, echo=FALSE}
+top10trumpaccounts2 = percent_trump_combined %>% 
+  ungroup() %>% 
+  select(state, trump_tweets) %>% 
+  head(10)
+
+#top10trumpaccounts2 %>% arrange(desc(trump_tweets))
+
+trumptweetstop10order2 = formatted_everything %>%
+  select(state, created_at, text) %>% 
+  mutate(
+    mentions_trump = str_detect(str_to_lower(text), 'trump'),
+    mentions_family = str_detect(text, paste(c("IvankaTrump", "Ivanka Trump", "EricTrump", "DonaldJTrumpJr"), collapse = "|"))
+  ) %>% 
+  filter(mentions_trump, !mentions_family) %>% 
+  filter(state %in% top10trumpaccounts2$state) %>% 
+  select(state, created_at) %>% 
+  group_by(state) %>% 
+  mutate(tweetorder = rank(created_at))
+
+#trumptweetstop10order2
+
+trumptweetstop10order2 %>% 
+  ggplot(aes(created_at, tweetorder, color = state)) +
+  geom_line() +
+  theme_minimal()+
+  # Legend title
+  scale_color_discrete(name = "Twitter handles") +
+  labs(title = "Tweeting patterns of the top 10 governors that mention Trump",
+  subtitle = "includes both official and personal accounts",
+  x = "",
+  y = "number of tweets that mention Trump",
+  caption = "Sourceline") +
+  # Chart style
+  theme(
+    text=element_text(size=12),
+    #title
+    plot.title = element_text(
+      size = 18,
+      #hjust = 0.5,
+      lineheight = 1.2
+    ),
+  # remove default grid
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank(),
+  # caption
+  # x-axis ticks
+  axis.ticks.x = element_line(
+     color = "#a7a9ac"
+  ),
+  # y-axis ticks
+  axis.ticks.y = element_blank(),
+  panel.grid.major.y =  element_line(
+    color = "#a7a9ac",
+    linetype = 3,
+    lineend = "butt"
+  )
+)
+```
