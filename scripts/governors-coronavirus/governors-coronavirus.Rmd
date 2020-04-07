@@ -1,0 +1,221 @@
+---
+title: "pandemic twitter"
+author: "Jen"
+date: "4/6/2020"
+output: html_document
+---
+
+## An analysis of governors' Twitter habits during COVID-19
+
+```{r import, include = FALSE}
+library(tidyverse)
+library(lubridate)
+library(DT)
+library(ggplot2)
+```
+
+
+
+```{r format, include = FALSE}
+
+everything <- read_csv("everything-2020-04-02-00-58-47.csv", guess_max = 50000)
+
+govHandles <- read_csv("govHandles2.csv")
+
+## 88,446 obs from 2019-03-01 to 2020-3-31
+formatted_everything = govHandles %>% 
+  full_join(everything, by = 'screen_name') %>% 
+  filter(created_at >= make_date(2019, 3, 1), created_at <  make_date(2020, 4, 1))
+
+```
+
+#### Most governors, regardless of party, tweeted more than usual this past March
+
+```{r overview, echo = FALSE}
+tweets_by_month = formatted_everything %>% 
+  group_by(name.x, screen_name, official, created_month = floor_date(created_at, "month")) %>% 
+  count()
+
+tweets_by_month %>%
+  ggplot(aes(created_month, n, color=screen_name)) +
+  geom_point() +
+  geom_line() +
+  geom_text(aes(label = screen_name), check_overlap = TRUE) +
+  theme(legend.position = 'none')
+```
+
+
+#### Let's take a closer look at the 10 governors' accounts that tweeted the most in March:
+
+- Gavin Newsom, from his @CAgovernor twitter account, ranked 10th out of 81 governors' Twitter accounts using the metric of who tweeted the most in March. This March, @CAgovernor tweeted 361 tweets. The account has averaged nearly 200 tweets per month from March 2019 to March 2020, with a median tweet count of 177 tweets. 
+
+
+``` {r  echo = FALSE}
+March_tweets_by_month = formatted_everything %>% 
+  group_by(name.x, screen_name, official, created_month = floor_date(created_at, "month")) %>% 
+  count() %>% 
+  filter(created_month == as.Date("2020-03-01")) %>% 
+  arrange(desc(n))
+
+top_ten_March = March_tweets_by_month %>%
+  head(10)
+
+tweets_by_month %>%
+  filter(screen_name %in% top_ten_March$screen_name) %>% 
+  ggplot(aes(created_month, n, color=screen_name)) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~screen_name)
+
+```
+
+## A very big table showing number of tweets by month, the mean and median tweets over 13 months, and the percent change in tweet count comparing March 2019 and March 2020:
+``` {r compare, echo = FALSE}
+tweets_by_month_wide = formatted_everything %>% 
+  group_by(name.x, screen_name, official, party, created_month = floor_date(created_at, "month")) %>% 
+  count() %>% 
+  spread(created_month, n)
+
+mean_tweets = tweets_by_month %>% 
+  group_by(screen_name) %>% 
+  summarize(mean = mean(n))
+
+median_tweets = tweets_by_month %>% 
+  group_by(screen_name) %>% 
+  summarize(median = median(n))
+
+tweets_by_month_wide_plus = tweets_by_month_wide %>% 
+  left_join(mean_tweets, by = "screen_name") %>% 
+  left_join(median_tweets, by = "screen_name") %>% 
+  mutate(percent_change_march = (`2020-03-01`-`2019-03-01`)/ `2019-03-01`*100) %>% 
+  arrange(desc(`2020-03-01`))
+
+datatable(tweets_by_month_wide_plus)
+```
+
+#### The number of coronavirus-related tweets that mention "covid," "coronavirus," or "virus" specifically in the body of the tweet, begin to increase in March.
+
+- the @CAgovernor Twitter account used the words, "covid," "coronavirus" or "virus" verbatem in 245 tweets this past year. (This doesn't capture other references to the pandemic)
+
+``` {r virus, echo = FALSE}
+covid_count = formatted_everything %>% 
+  mutate(mentions_covid = str_detect(str_to_lower(text), paste(c("covid", "coronavirus", "virus"), collapse = "|"))) %>% 
+  filter(mentions_covid) %>% 
+  select(screen_name, created_at) %>% 
+  group_by(screen_name) %>% 
+  mutate(tweet_order = rank(created_at))
+
+covid_count %>%  
+  ggplot(aes(created_at, tweet_order, color = screen_name)) +
+  geom_line() +
+  theme(legend.position = 'none')
+
+covid_count_10 = covid_count %>%
+  group_by(screen_name) %>% 
+  summarize(total = max(tweet_order)) %>% 
+  arrange(desc(total))
+
+covid_count_10
+```
+
+
+## And COVID19 is the top hashtag used by governors this past year:
+``` {r top-hashtag, echo = FALSE}
+top_hashtag = formatted_everything %>%
+  group_by(hashtags) %>% 
+  count() %>% 
+  arrange(desc(n)) %>% 
+  head(10)
+
+top_hashtag
+```
+
+#### One doesn't need to tweet the most to get noticed. 
+
+When governors tweet with leadership during the coronavirus pandemic, followers notice and respond: Nine of the top 10 most favorited tweets from a governor's Twitter acount these last 13 months have been coronavirus-related.
+
+Governor Jay Inslee of Washington, had the most favorited tweet since March 2019 (as of March 31, 2020). The governor, from his @JayInslee account, tweeted on Feb. 28, "I just received a call from @VP Mike Pence, thanking Washington state for our efforts to combat the coronavirus. I told him our work would be more successful if the Trump administration stuck to the science and told the truth." It was favorited about 309K times, making it the most favorited tweet from a governor's Twitter acount in the past 13 months. 
+
+Governor Andrew Cuomo of New York, tweeting from @NYGovCuomo, has six of the ten most favorited tweets. 
+
+Governor Gretchen Whitmer of Michigan, has the fourth most favorited tweet. She quote-tweeted CNN reporter Daniel Dale, who said, "Trump says he's having a big problem with "the young, a woman governor, you know who I'm talking about, from Michigan." Whitmer quote-tweeted back, "Hi, my name is Gretchen Whitmer, and that governor is me 👋 I've asked repeatedly and respectfully for help. We need it. No more political attacks, just PPEs, ventilators, N95 masks, test kits. You said you stand with Michigan — prove it." The tweet was favorited about 229K times.
+
+Governor JB Pritzker of Illinois, quote-tweeted this rebuttal to President Trump:
+
+"You wasted precious months when you could've taken action to protect Americans & Illinoisans.
+
+You should be leading a national response instead of throwing tantrums from the back seat. 
+
+Where were the tests when we needed them?
+
+Where's the PPE?
+
+Get off Twitter & do your job."
+
+Pritzker's rebuttal was favorited and retweeted more times than Trump's original tweet.
+
+``` {r top-tweets, echo = FALSE}
+
+top_tweet = formatted_everything %>% 
+  select(name.x, screen_name, state, party, official, created_at, text, favorite_count, retweet_count, `media_t.co`, is_quote, is_retweet) %>% 
+  arrange(desc(favorite_count)) %>% 
+  head(10)
+
+datatable(top_tweet)
+```
+
+### A look at coronavirus-related tweets by topic:
+
+#### Gov John Bel Edwards was the first to use "social distancing" in a tweet, on 3/10
+
+``` {r social_distancing, echo = FALSE}
+social_distancing = formatted_everything %>% 
+  mutate(mentions = str_detect(str_to_lower(text), "social distancing")) %>% 
+  filter(mentions) %>% 
+  arrange(created_at) %>% 
+  select(name.x, screen_name, created_at, text, state, official, party)
+datatable(social_distancing)
+```
+
+#### Gov John Bel Edwards was the first to use "flatten the curve" in a tweet, on 3/12
+``` {r flatten, echo = FALSE}
+flatten_curve = formatted_everything %>% 
+  mutate(mentions = str_detect(str_to_lower(text), "flatten the curve")) %>% 
+  filter(mentions) %>% 
+  arrange(created_at) %>% 
+  select(name.x, screen_name, created_at, text, state, official, party)
+datatable(flatten_curve)
+```
+
+
+#### Most governors seem uncomfortable with the term, "shelter in place." Gavin Newson is an exception.
+``` {r shelter, echo = FALSE}
+shelter = formatted_everything %>% 
+  mutate(mentions = str_detect(str_to_lower(text), paste(c("shelter in place", "shelter-in-place"), collapse = "|"))) %>% 
+  filter(mentions) %>% 
+  arrange(created_at) %>% 
+  select(name.x, screen_name, created_at, text, state, official, party)
+datatable(shelter)
+```
+
+#### Governors seem to prefer using "safer at home" and "stay home" campaigns to "shelter in place."
+
+``` {r home, echo = FALSE}
+home = formatted_everything %>% 
+  filter(created_at > as.Date("2020-02-07 18:59:44")) %>% 
+  mutate(mentions = str_detect(str_to_lower(text), paste(c("safer at home", "stay home"), collapse = "|"))) %>% 
+  filter(mentions) %>% 
+  arrange(created_at) %>% 
+  select(name.x, screen_name, created_at, text, state, official, party)
+datatable(home)
+```
+
+#### As cases rise, governors have also been using Twitter to plead for medical supplies, including N95 masks, PPE, ventilators, and test kits, in short supply
+``` {r supplies, echo = FALSE}
+supplies = formatted_everything %>% 
+  mutate(mentions = str_detect(str_to_lower(text), paste(c("masks", "N95", "PPE", "ventilators", "test kits"), collapse = "|"))) %>% 
+  filter(mentions) %>% 
+  arrange(created_at) %>% 
+  select(name.x, screen_name, created_at, text, state, official, party)
+datatable(supplies)
+```
