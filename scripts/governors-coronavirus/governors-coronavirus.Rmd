@@ -1,11 +1,78 @@
 ---
 title: "pandemic twitter"
 author: "Jen"
-date: "4/6/2020"
+date: "4/9/2020"
 output: html_document
 ---
 
 ## An analysis of governors' Twitter habits during COVID-19
+
+In times of national emergencies, people have looked to the president for direction and leadership. During the coronavirus pandemic, state governors have taken on that role. We see that playing out on Twitter as well, as governors use the social media platform to inform and update their constituents, as well as highlight the lack of medical supplies and support and direction from the federal government.  
+
+#### Tweeting more, and about coronavirus
+Most governors, regardless of party, have been tweeting more than usual this past March compared to last March and more than their median monthly tweet count this past year. Not only are they tweeting more, 46 out of 50 governors’ official Twitter accounts in March directly mentioned “covid”, “coronavirus” or “virus” in at least a quarter of their tweets that month. In fact, #COVID19 was the most used hashtag these past 13 months. It was used 2,057 times by various U.S. governors. And #coronavirus was the eighth most used hashtag, used 193 times. 
+
+Top tweeter Gov. John Bel Edwards of Louisiana tweeted 1,585 times in March, compared to 135 times last March, a 1074% change. Almost 49% of his tweets in March mentioned “covid”, “coronavirus,” or “virus” directly, compared to less than 2% of his tweets in February.
+
+In second, Gov. Mike DeWine of Ohio tweeted 1,116 times this March, compared to 88 times last March. About 48% of his tweets mentioned “covid”, “coronavirus,” or “virus” directly in the body of his tweets, compared to about 9.5% of his February Tweets.
+
+In third, Gov. Phil Murphy of New Jersey tweeted 798 times this March, compared to 248 times last March, a 221% change. He mentioned “covid,” “coronavirus,” or “virus” directly 42% of the time.
+
+Gov. JB Pritzker of Illinois tweeted the 8th most in March, 427 times compared to 77 times last March.
+
+Gov. Andrew Cuomo of New York ranked ninth, tweeting 394 times compared to 85 times last March.
+
+Gavin Newsom from @CAgovernor ranked tenth, tweeting 361 times compared to 92 times last March. The @CAgovernor account has averaged almost 200 tweets each month over the past year, with a median tweet count of 177 tweets. Newsom actually tweeted more times in October, 392 times, than he did this March. About 65% of Newsom’s March tweets mentioned “covid,” “coronavirus,” or “virus” directly, compared to about 6% in February. 
+
+Conversely, Gov. Phil Bryant of Mississippi, tweeted the least in March. He tweeted 22 times, compared to 110 last March. (His medin tweet count over 13 months is 110 tweets.) And less than 5% of his March tweets mentioned “covid,” “coronavirus,” or “virus” directly in the body of the tweet. 
+
+Gov. Ron DeSantis of Florida also tweeted second least in March. He tweeted 24 times, compared to 106 times last March. He mentioned “covid,” “coronavirus” or “virus” directly in about 58% of his March tweets. Obviously, this is different than having a good strategy to combat transmission.  
+
+#### Audience engagement
+When governors tweet with leadership during the coronavirus pandemic, followers notice and respond: Nine of the top 10 most favorited tweets from a governor’s Twitter account these last 13 months have been coronavirus-related.
+
+Governor Jay Inslee of Washington, had the most favorited tweet since March 2019 (as of March 31, 2020). The governor, from his @JayInslee account, tweeted on Feb. 28:
+
+“I just received a call from @VP Mike Pence, thanking Washington state for our efforts to combat the coronavirus. I told him our work would be more successful if the Trump administration stuck to the science and told the truth.” 
+
+It was favorited about 309K times, making it the most favorited tweet from a governor’s Twitter account in the past 13 months.
+
+Governor Andrew Cuomo of New York, tweeting from @NYGovCuomo,wrote six of the ten most-favorited tweets, including ones that rejected a call to sacrifice the elderly for the sake of the economy. 
+
+Governor Gretchen Whitmer of Michigan, tweeted the fourth most-favorited tweet. She quote-tweeted CNN reporter Daniel Dale, who said:
+
+“Trump says he’s having a big problem with”the young, a woman governor, you know who I’m talking about, from Michigan." 
+
+Whitmer quote-tweeted back, “Hi, my name is Gretchen Whitmer, and that governor is me 👋 I’ve asked repeatedly and respectfully for help. We need it. No more political attacks, just PPEs, ventilators, N95 masks, test kits. You said you stand with Michigan — prove it.” 
+
+The tweet was liked about 229K times.
+
+Governor JB Pritzker of Illinois, had the fifth most popular tweet, a quote-tweet rebuttal to President Trump:
+"You wasted precious months when you could’ve taken action to protect Americans & Illinoisans. You should be leading a national response instead of throwing tantrums from the back seat. Where were the tests when we needed them? Where’s the PPE? Get off Twitter & do your job."
+
+Pritzker’s rebuttal was favorited and retweeted more times than Trump’s original tweet.
+
+Prior to the coronavirus pandemic, Newsom’s quote-tweet rebuttal to President Trump when the president threatened to cut federal aid to fight wildfires, “You don’t believe in climate change. You are excused from this conversation.” was the most favorited tweet of any governor this past year. It was favorited about 166,000 times and retweeted about 26,000 times. 
+
+Now, it ranks sixth in terms of most favorited tweets. None of Newsom’s coronavirus-related tweets make the top ten.  
+
+#### Covid-specific language
+If you scroll down to the bottom, you can also see when the governors started using certain coronavirus-specific phrases in their tweets. 
+
+For example, Gov. John Bel Edwards of Louisiana was the first to use “social distancing” in a tweet on March 10: 
+It is important that the public take measures to protect their health and reduce the spread of illness, including avoiding going out in public when you are sick, washing your hands, social distancing and disinfecting commonly used surfaces. #lagov #lalege
+
+Bel Edwards was also the first to tweet the phrase, “flatten the curve” on March 12:
+
+.@LouisianaGov says the goal is to lower the peak, flatten the curve of the virus spread so that hospitals, treatment facilities are not overwhelmed. #COVID19
+
+Other takeaways, which you can explore if you scroll down to the end:
+
+-Governors prefer using “safer at home” or “stay home” than “shelter in place.” 
+
+-Also, you can see how governors begin to inventory their states’ stock of medical supplies, including masks and ventilators  
+  
+
 
 ```{r import, include = FALSE}
 library(tidyverse)
@@ -25,6 +92,7 @@ govHandles <- read_csv("govHandles2.csv")
 ## 88,446 obs from 2019-03-01 to 2020-3-31
 formatted_everything = govHandles %>% 
   full_join(everything, by = 'screen_name') %>% 
+  mutate(status_id = format(status_id, scientific = FALSE)) %>% 
   filter(created_at >= make_date(2019, 3, 1), created_at <  make_date(2020, 4, 1))
 
 ```
@@ -32,7 +100,8 @@ formatted_everything = govHandles %>%
 #### Most governors, regardless of party, tweeted more than usual this past March
 
 ```{r overview, echo = FALSE}
-tweets_by_month = formatted_everything %>% 
+tweets_by_month = formatted_everything %>%
+  filter(official) %>% 
   group_by(name.x, screen_name, official, created_month = floor_date(created_at, "month")) %>% 
   count()
 
@@ -88,7 +157,29 @@ tweets_by_month_wide_plus = tweets_by_month_wide %>%
   left_join(mean_tweets, by = "screen_name") %>% 
   left_join(median_tweets, by = "screen_name") %>% 
   mutate(percent_change_march = (`2020-03-01`-`2019-03-01`)/ `2019-03-01`*100) %>% 
-  arrange(desc(`2020-03-01`))
+  arrange(desc(`2020-03-01`)) %>% 
+  mutate(more_median = `2020-03-01` > median)
+
+covid_count_month = formatted_everything %>% 
+  mutate(mentions_covid = str_detect(str_to_lower(text), paste(c("covid", "coronavirus", "virus"), collapse = "|"))) %>% 
+  filter(mentions_covid) %>% 
+  mutate(created_month = floor_date(created_at, 'month')) %>% 
+  group_by(name = name.x, screen_name, created_month) %>% 
+  count() %>% 
+  spread(created_month, n)
+
+what_percent = covid_count_month %>% 
+  select(name, screen_name, `2020-02-01_covid` = `2020-02-01`, `2020-03-01_covid` = `2020-03-01`) %>% 
+  left_join(tweets_by_month_wide_plus, by = 'screen_name') %>% 
+  select(-name.x) %>% 
+  mutate(
+    percent_feb = `2020-02-01_covid`/`2020-02-01`*100,
+    percent_mar = `2020-03-01_covid`/`2020-03-01`*100
+  ) %>% 
+  mutate(over_25 = percent_mar >=25) %>%
+  filter(official)
+
+
 
 datatable(tweets_by_month_wide_plus)
 ```
@@ -98,9 +189,10 @@ datatable(tweets_by_month_wide_plus)
 - the @CAgovernor Twitter account used the words, "covid," "coronavirus" or "virus" verbatem in 245 tweets this past year. (This doesn't capture other references to the pandemic)
 
 ``` {r virus, echo = FALSE}
+
 covid_count = formatted_everything %>% 
   mutate(mentions_covid = str_detect(str_to_lower(text), paste(c("covid", "coronavirus", "virus"), collapse = "|"))) %>% 
-  filter(mentions_covid) %>% 
+  filter(official, mentions_covid) %>% 
   select(screen_name, created_at) %>% 
   group_by(screen_name) %>% 
   mutate(tweet_order = rank(created_at))
@@ -119,40 +211,35 @@ covid_count_10
 ```
 
 
-## And COVID19 is the top hashtag used by governors this past year:
+## And COVID19 is the top hashtag used by governors this past year:  
+
+-NA means no hashtag used  
+-the chart with the larger numbers looks at hashtags used by all accounts, official and personal  
+-the chart with the smaller numbers looks at official accounts. When governors tweet from a single account, I consider it their official account  
+
 ``` {r top-hashtag, echo = FALSE}
 top_hashtag = formatted_everything %>%
   group_by(hashtags) %>% 
   count() %>% 
-  arrange(desc(n)) %>% 
+  arrange(desc(times_used = n)) %>% 
   head(10)
 
 top_hashtag
+
+top_hashtag_official = formatted_everything %>%
+  filter(official) %>% 
+  group_by(hashtags) %>% 
+  count() %>% 
+  arrange(desc(times_used = n)) %>% 
+  head(10)
+
+top_hashtag_official
 ```
 
 #### One doesn't need to tweet the most to get noticed. 
 
 When governors tweet with leadership during the coronavirus pandemic, followers notice and respond: Nine of the top 10 most favorited tweets from a governor's Twitter acount these last 13 months have been coronavirus-related.
 
-Governor Jay Inslee of Washington, had the most favorited tweet since March 2019 (as of March 31, 2020). The governor, from his @JayInslee account, tweeted on Feb. 28, "I just received a call from @VP Mike Pence, thanking Washington state for our efforts to combat the coronavirus. I told him our work would be more successful if the Trump administration stuck to the science and told the truth." It was favorited about 309K times, making it the most favorited tweet from a governor's Twitter acount in the past 13 months. 
-
-Governor Andrew Cuomo of New York, tweeting from @NYGovCuomo, has six of the ten most favorited tweets. 
-
-Governor Gretchen Whitmer of Michigan, has the fourth most favorited tweet. She quote-tweeted CNN reporter Daniel Dale, who said, "Trump says he's having a big problem with "the young, a woman governor, you know who I'm talking about, from Michigan." Whitmer quote-tweeted back, "Hi, my name is Gretchen Whitmer, and that governor is me 👋 I've asked repeatedly and respectfully for help. We need it. No more political attacks, just PPEs, ventilators, N95 masks, test kits. You said you stand with Michigan — prove it." The tweet was favorited about 229K times.
-
-Governor JB Pritzker of Illinois, quote-tweeted this rebuttal to President Trump:
-
-"You wasted precious months when you could've taken action to protect Americans & Illinoisans.
-
-You should be leading a national response instead of throwing tantrums from the back seat. 
-
-Where were the tests when we needed them?
-
-Where's the PPE?
-
-Get off Twitter & do your job."
-
-Pritzker's rebuttal was favorited and retweeted more times than Trump's original tweet.
 
 ``` {r top-tweets, echo = FALSE}
 
@@ -177,10 +264,10 @@ social_distancing = formatted_everything %>%
 datatable(social_distancing)
 ```
 
-#### Gov John Bel Edwards was the first to use "flatten the curve" in a tweet, on 3/12
+#### Gov John Bel Edwards was the first to use "flatten the curve" or "flattening the curve" in a tweet, on 3/12
 ``` {r flatten, echo = FALSE}
 flatten_curve = formatted_everything %>% 
-  mutate(mentions = str_detect(str_to_lower(text), "flatten the curve")) %>% 
+  mutate(mentions = str_detect(str_to_lower(text), paste(c("flatten the curve", "flattening the curve"), collapse = '|'))) %>% 
   filter(mentions) %>% 
   arrange(created_at) %>% 
   select(name.x, screen_name, created_at, text, state, official, party)
@@ -198,7 +285,7 @@ shelter = formatted_everything %>%
 datatable(shelter)
 ```
 
-#### Governors seem to prefer using "safer at home" and "stay home" campaigns to "shelter in place."
+#### Governors seem to prefer using the terms "safer at home" and "stay home" to "shelter in place."
 
 ``` {r home, echo = FALSE}
 home = formatted_everything %>% 
