@@ -1,18 +1,20 @@
 ---
 title: "pandemic twitter"
 author: "Jen"
-date: "4/9/2020"
+date: " `r Sys.Date()`"
 output: html_document
 ---
 
-## An analysis of governors' Twitter habits during COVID-19
+## An analysis of governors' Twitter habits during COVID-19, plus President Trump
 
 In times of national emergencies, people have looked to the president for direction and leadership. During the coronavirus pandemic, state governors have taken on that role. We see that playing out on Twitter as well, as governors use the social media platform to inform and update their constituents, as well as highlight the lack of medical supplies and support and direction from the federal government.  
 
 #### Tweeting more, and about coronavirus
-Most governors, regardless of party, have been tweeting more than usual this past March compared to last March and more than their median monthly tweet count this past year. Not only are they tweeting more, 46 out of 50 governors’ official Twitter accounts in March directly mentioned “covid”, “coronavirus” or “virus” in at least a quarter of their tweets that month. In fact, #COVID19 was the most used hashtag these past 13 months. It was used 2,057 times by various U.S. governors. And #coronavirus was the eighth most used hashtag, used 193 times. 
+Most governors, regardless of party, have been tweeting more than usual this past March compared to last March and more than their median monthly tweet count this past year. Not only are they tweeting more, 46 out of 50 governors’ official Twitter accounts in March directly mentioned “covid”, “coronavirus” or “virus” in at least a quarter of their tweets that month. In fact, #COVID19 was the most used hashtag these past 13 months. And #coronavirus was the eighth most used hashtag. 
 
-Top tweeter Gov. John Bel Edwards of Louisiana tweeted 1,585 times in March, compared to 135 times last March, a 1074% change. Almost 49% of his tweets in March mentioned “covid”, “coronavirus,” or “virus” directly, compared to less than 2% of his tweets in February.
+This was not the case with President Trump. While Trump tweeted 971 times in March, above his median tweet count of 797 tweets, fewer than a quarter of his March tweets mentioned "covid", "coronavirus" or "virus directly.
+
+Leading the uptick of tweets this past March, top tweeter Gov. John Bel Edwards of Louisiana tweeted 1,585 times in March, compared to 135 times last March, a 1074% change. Almost 49% of his tweets in March mentioned “covid”, “coronavirus,” or “virus” directly, compared to less than 2% of his tweets in February.
 
 In second, Gov. Mike DeWine of Ohio tweeted 1,116 times this March, compared to 88 times last March. About 48% of his tweets mentioned “covid”, “coronavirus,” or “virus” directly in the body of his tweets, compared to about 9.5% of his February Tweets.
 
@@ -37,7 +39,7 @@ Governor Jay Inslee of Washington, had the most favorited tweet since March 2019
 
 It was favorited about 309K times, making it the most favorited tweet from a governor’s Twitter account in the past 13 months.
 
-Governor Andrew Cuomo of New York, tweeting from @NYGovCuomo,wrote six of the ten most-favorited tweets, including ones that rejected a call to sacrifice the elderly for the sake of the economy. 
+Governor Andrew Cuomo of New York, tweeting from @NYGovCuomo, wrote six of the ten most-favorited tweets, including ones that rejected a call to sacrifice the elderly for the sake of the economy. 
 
 Governor Gretchen Whitmer of Michigan, tweeted the fourth most-favorited tweet. She quote-tweeted CNN reporter Daniel Dale, who said:
 
@@ -56,6 +58,8 @@ Prior to the coronavirus pandemic, Newsom’s quote-tweet rebuttal to President 
 
 Now, it ranks sixth in terms of most favorited tweets. None of Newsom’s coronavirus-related tweets make the top ten.  
 
+However, it's apples and oranges to compare the attention that Trump's tweets get to governors. If we compared all the governors' tweets to Trump's tweets within the same 13 month period, Jay Inslee's top tweet from Feb. 28 is #52 in terms of having the most favorites.
+
 #### Covid-specific language
 If you scroll down to the bottom, you can also see when the governors started using certain coronavirus-specific phrases in their tweets. 
 
@@ -68,9 +72,11 @@ Bel Edwards was also the first to tweet the phrase, “flatten the curve” on M
 
 Other takeaways, which you can explore if you scroll down to the end:
 
--Governors prefer using “safer at home” or “stay home” than “shelter in place.” 
+- Governors prefer using “safer at home” or “stay home” than “shelter in place.” 
 
--Also, you can see how governors begin to inventory their states’ stock of medical supplies, including masks and ventilators  
+- Also, you can see how governors begin to inventory their states’ stock of medical supplies, including masks and ventilators  
+
+- None of the governors use inflammatory terms like "Wuhan virus", "Chinese virus," or "China virus" to describe SARS-CoV-2. President Trump does, nine times.
   
 
 
@@ -79,69 +85,104 @@ library(tidyverse)
 library(lubridate)
 library(DT)
 library(ggplot2)
+library(gghighlight)
+library(forcats)
 ```
-
 
 
 ```{r format, include = FALSE}
 
-everything <- read_csv("everything-2020-04-02-00-58-47.csv", guess_max = 50000)
+everything <- read_csv("everything-2020-04-02-00-58-47.csv", guess_max = 50000) %>% 
+  select(-73)
 
-govHandles <- read_csv("govHandles2.csv")
+govHandles <- read_csv("govHandles2.csv") %>% 
+  rename(name = name.x)
 
+trump <- read_csv("trump_tweets_out.csv", guess_max = 50000) %>% 
+  mutate(screen_name = "realDonaldTrump",
+         name = "Donald Trump",
+         official = as.logical("TRUE"),
+         status_id = format(id_str, scientific = FALSE),
+         created_at = mdy_hms(created_at),
+         screen_name_factor = factor("realDonaldTrump")
+         ) %>% 
+  filter(created_at >= make_date(2019, 3, 1), created_at < make_date(2020,4,1))
+  
 ## 88,446 obs from 2019-03-01 to 2020-3-31
-formatted_everything = govHandles %>% 
+formatted_everything = govHandles %>%
   full_join(everything, by = 'screen_name') %>% 
   mutate(status_id = format(status_id, scientific = FALSE)) %>% 
   filter(created_at >= make_date(2019, 3, 1), created_at <  make_date(2020, 4, 1))
+
+both = formatted_everything %>% 
+  bind_rows(trump)
 
 ```
 
 #### Most governors, regardless of party, tweeted more than usual this past March
 
 ```{r overview, echo = FALSE}
-tweets_by_month = formatted_everything %>%
+
+tweets_by_month = both %>%
   filter(official) %>% 
-  group_by(name.x, screen_name, official, created_month = floor_date(created_at, "month")) %>% 
+  group_by(name, screen_name, official, created_month = floor_date(created_at, "month")) %>% 
   count()
 
-tweets_by_month %>%
+tweets_by_month %>% 
   ggplot(aes(created_month, n, color=screen_name)) +
   geom_point() +
   geom_line() +
-  geom_text(aes(label = screen_name), check_overlap = TRUE) +
+  facet_wrap(~screen_name) +
   theme(legend.position = 'none')
 ```
 
 
-#### Let's take a closer look at the 10 governors' accounts that tweeted the most in March:
+#### Let's take a closer look at the 10 governors that tweeted the most in March, plus President Trump, on a tweets-by-month basis:
 
-- Gavin Newsom, from his @CAgovernor twitter account, ranked 10th out of 81 governors' Twitter accounts using the metric of who tweeted the most in March. This March, @CAgovernor tweeted 361 tweets. The account has averaged nearly 200 tweets per month from March 2019 to March 2020, with a median tweet count of 177 tweets. 
+- Gavin Newsom, from his @CAgovernor twitter account, ranked 10th in number of March tweets from governors' Twitter accounts. This March, @CAgovernor tweeted 361 tweets. The account has averaged nearly 200 tweets per month from March 2019 to March 2020, with a median tweet count of 177 tweets. 
 
 
 ``` {r  echo = FALSE}
-March_tweets_by_month = formatted_everything %>% 
-  group_by(name.x, screen_name, official, created_month = floor_date(created_at, "month")) %>% 
-  count() %>% 
+
+March_tweets_by_month = tweets_by_month %>%  
   filter(created_month == as.Date("2020-03-01")) %>% 
   arrange(desc(n))
 
-top_ten_March = March_tweets_by_month %>%
-  head(10)
+March_tbm_factor = March_tweets_by_month %>%
+  ungroup() %>% 
+  mutate(screen_name_factor = fct_inorder(screen_name)) %>% 
+  select(-name, -official, -created_month, -n)
 
+tweets_by_month = tweets_by_month %>% 
+  left_join(March_tbm_factor, by = "screen_name")
+
+## Grab the 10 ten for later
+top_ten_March = March_tbm_factor %>% 
+  head(11)
+
+## top 10 tweeters in March, small multiples, plus Trump
 tweets_by_month %>%
-  filter(screen_name %in% top_ten_March$screen_name) %>% 
-  ggplot(aes(created_month, n, color=screen_name)) +
+  filter(screen_name_factor %in% top_ten_March$screen_name_factor) %>% 
+  ggplot(aes(created_month, n)) +
   geom_point() +
   geom_line() +
-  facet_wrap(~screen_name)
+  facet_wrap(~screen_name_factor) +
+  gghighlight(screen_name_factor == "realDonaldTrump")
 
 ```
 
-## A very big table showing number of tweets by month, the mean and median tweets over 13 months, and the percent change in tweet count comparing March 2019 and March 2020:
+## Here's a very wide table showing each governors':
+-  monthly tweet count  
+-  their mean and median tweet counts these last 13 months  
+-  percent change in number of tweets comparing March 2019 to March 2020  
+-  whether their March 2020 tweets exceeded their median tweet count
+-  the number of times and percentage of tweets mentioning "covid," "coronavirus", or "virus" directly in Feb and March 2020
+-  whether the percentage of March tweets mentioning "covid," "coronavirus", or "virus" exceeded 25%. 
+
+
 ``` {r compare, echo = FALSE}
-tweets_by_month_wide = formatted_everything %>% 
-  group_by(name.x, screen_name, official, party, created_month = floor_date(created_at, "month")) %>% 
+tweets_by_month_wide = both %>% 
+  group_by(name, screen_name, official, party, created_month = floor_date(created_at, "month")) %>% 
   count() %>% 
   spread(created_month, n)
 
@@ -158,30 +199,34 @@ tweets_by_month_wide_plus = tweets_by_month_wide %>%
   left_join(median_tweets, by = "screen_name") %>% 
   mutate(percent_change_march = (`2020-03-01`-`2019-03-01`)/ `2019-03-01`*100) %>% 
   arrange(desc(`2020-03-01`)) %>% 
+  filter(official) %>% 
   mutate(more_median = `2020-03-01` > median)
 
-covid_count_month = formatted_everything %>% 
+
+## what percentage of their March tweets mentioned coronavirus or COVID-19/COVID19 directly?
+
+covid_count_month = both %>% 
   mutate(mentions_covid = str_detect(str_to_lower(text), paste(c("covid", "coronavirus", "virus"), collapse = "|"))) %>% 
   filter(mentions_covid) %>% 
   mutate(created_month = floor_date(created_at, 'month')) %>% 
-  group_by(name = name.x, screen_name, created_month) %>% 
+  group_by(name, screen_name, created_month) %>% 
   count() %>% 
   spread(created_month, n)
 
+## what percent of tweets mention "covid," "coronavirus," or "virus" in Feb vs March?
+
 what_percent = covid_count_month %>% 
   select(name, screen_name, `2020-02-01_covid` = `2020-02-01`, `2020-03-01_covid` = `2020-03-01`) %>% 
-  left_join(tweets_by_month_wide_plus, by = 'screen_name') %>% 
-  select(-name.x) %>% 
+  left_join(tweets_by_month_wide_plus, by = c('screen_name', 'name')) %>% 
   mutate(
     percent_feb = `2020-02-01_covid`/`2020-02-01`*100,
     percent_mar = `2020-03-01_covid`/`2020-03-01`*100
   ) %>% 
   mutate(over_25 = percent_mar >=25) %>%
-  filter(official)
+  filter(official) 
 
+datatable(what_percent)
 
-
-datatable(tweets_by_month_wide_plus)
 ```
 
 #### The number of coronavirus-related tweets that mention "covid," "coronavirus," or "virus" specifically in the body of the tweet, begin to increase in March.
@@ -190,7 +235,7 @@ datatable(tweets_by_month_wide_plus)
 
 ``` {r virus, echo = FALSE}
 
-covid_count = formatted_everything %>% 
+covid_count = both %>% 
   mutate(mentions_covid = str_detect(str_to_lower(text), paste(c("covid", "coronavirus", "virus"), collapse = "|"))) %>% 
   filter(official, mentions_covid) %>% 
   select(screen_name, created_at) %>% 
@@ -244,11 +289,27 @@ When governors tweet with leadership during the coronavirus pandemic, followers 
 ``` {r top-tweets, echo = FALSE}
 
 top_tweet = formatted_everything %>% 
-  select(name.x, screen_name, state, party, official, created_at, text, favorite_count, retweet_count, `media_t.co`, is_quote, is_retweet) %>% 
+  select(name, screen_name, state, party, official, created_at, text, favorite_count, retweet_count, `media_t.co`, is_quote, is_retweet) %>% 
   arrange(desc(favorite_count)) %>% 
-  head(10)
+  head(100)
 
 datatable(top_tweet)
+```
+
+### Trump's tweets still get more attention (based on the number of times a tweet is favorited) but apples to oranges. Here's a table of top tweets, once we add Trump's tweets to the mix:  
+
+-  Jay Inslee's top tweet (see above) ranks #52 
+-  capped at top 100 tweets bc of size restrictions  
+
+
+``` {r top-tweets-trump, echo = FALSE}
+
+top_tweet_both = both %>%
+  select(screen_name, created_at, text, favorite_count) %>% 
+  arrange(desc(favorite_count)) %>% 
+  head(100)
+
+datatable(top_tweet_both)
 ```
 
 ### A look at coronavirus-related tweets by topic:
@@ -256,21 +317,21 @@ datatable(top_tweet)
 #### Gov John Bel Edwards was the first to use "social distancing" in a tweet, on 3/10
 
 ``` {r social_distancing, echo = FALSE}
-social_distancing = formatted_everything %>% 
+social_distancing = both %>% 
   mutate(mentions = str_detect(str_to_lower(text), "social distancing")) %>% 
   filter(mentions) %>% 
   arrange(created_at) %>% 
-  select(name.x, screen_name, created_at, text, state, official, party)
+  select(name, screen_name, created_at, text, state, official, party)
 datatable(social_distancing)
 ```
 
 #### Gov John Bel Edwards was the first to use "flatten the curve" or "flattening the curve" in a tweet, on 3/12
 ``` {r flatten, echo = FALSE}
-flatten_curve = formatted_everything %>% 
+flatten_curve = both %>% 
   mutate(mentions = str_detect(str_to_lower(text), paste(c("flatten the curve", "flattening the curve"), collapse = '|'))) %>% 
   filter(mentions) %>% 
   arrange(created_at) %>% 
-  select(name.x, screen_name, created_at, text, state, official, party)
+  select(name, screen_name, created_at, text, state, official, party)
 datatable(flatten_curve)
 ```
 
@@ -279,30 +340,44 @@ datatable(flatten_curve)
 ``` {r shelter, echo = FALSE}
 shelter = formatted_everything %>% 
   mutate(mentions = str_detect(str_to_lower(text), paste(c("shelter in place", "shelter-in-place"), collapse = "|"))) %>% 
-  filter(mentions) %>% 
+  filter(mentions,
+         created_at >= make_date(2020,3,1)) %>% 
   arrange(created_at) %>% 
-  select(name.x, screen_name, created_at, text, state, official, party)
+  select(name, screen_name, created_at, text, state, official, party)
 datatable(shelter)
 ```
 
 #### Governors seem to prefer using the terms "safer at home" and "stay home" to "shelter in place."
 
 ``` {r home, echo = FALSE}
-home = formatted_everything %>% 
+home = both %>% 
   filter(created_at > as.Date("2020-02-07 18:59:44")) %>% 
   mutate(mentions = str_detect(str_to_lower(text), paste(c("safer at home", "stay home"), collapse = "|"))) %>% 
   filter(mentions) %>% 
   arrange(created_at) %>% 
-  select(name.x, screen_name, created_at, text, state, official, party)
+  select(name, screen_name, created_at, text, state, official, party)
 datatable(home)
 ```
 
 #### As cases rise, governors have also been using Twitter to plead for medical supplies, including N95 masks, PPE, ventilators, and test kits, in short supply
 ``` {r supplies, echo = FALSE}
-supplies = formatted_everything %>% 
+supplies = both %>% 
   mutate(mentions = str_detect(str_to_lower(text), paste(c("masks", "N95", "PPE", "ventilators", "test kits"), collapse = "|"))) %>% 
+  filter(mentions,
+         created_at >= make_date(2020,2,1)) %>% 
+  arrange(created_at) %>% 
+  select(name, screen_name, created_at, text, state, official, party)
+datatable(supplies)
+```
+
+#### Who uses racist language on Twitter to talk about SARS-CoV-2? None of the governors. Trump, nine times.
+
+```{r racist, echo = FALSE}
+racist = both %>% 
+  mutate(mentions = str_detect(str_to_lower(text), paste(c("china virus", "chinese virus", "wuhan virus"), collapse = "|"))) %>% 
   filter(mentions) %>% 
   arrange(created_at) %>% 
-  select(name.x, screen_name, created_at, text, state, official, party)
-datatable(supplies)
+  select(name, screen_name, created_at, text, state, official, party)
+
+datatable(racist)
 ```
