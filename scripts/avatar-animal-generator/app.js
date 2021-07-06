@@ -23,16 +23,13 @@ var animal_list = [
     "Camel",
     "Capybara",
     "Caribou",
-    "Cassowary",
     "Cat",
     "Caterpillar",
     "Cattle",
-    "Chamois",
     "Cheetah",
     "Chicken",
     "Chimpanzee",
     "Chinchilla",
-    "Chough",
     "Clam",
     "Cobra",
     "Cockroach",
@@ -43,22 +40,15 @@ var animal_list = [
     "Crane",
     "Crocodile",
     "Crow",
-    "Curlew",
     "Deer",
     "Dinosaur",
     "Dog",
-    "Dogfish",
     "Dolphin",
-    "Dotterel",
     "Dove",
     "Dragonfly",
     "Duck",
-    "Dugong",
-    "Dunlin",
     "Eagle",
-    "Echidna",
     "Eel",
-    "Eland",
     "Elephant",
     "Elk",
     "Emu",
@@ -70,7 +60,6 @@ var animal_list = [
     "Fly",
     "Fox",
     "Frog",
-    "Gaur",
     "Gazelle",
     "Gerbil",
     "Giraffe",
@@ -84,7 +73,6 @@ var animal_list = [
     "Goshawk",
     "Grasshopper",
     "Grouse",
-    "Guanaco",
     "Gull",
     "Hamster",
     "Hare",
@@ -108,9 +96,6 @@ var animal_list = [
     "Kingfisher",
     "Koala",
     "Kookabura",
-    "Kouprey",
-    "Kudu",
-    "Lapwing",
     "Lark",
     "Lemur",
     "Leopard",
@@ -120,7 +105,6 @@ var animal_list = [
     "Locust",
     "Loris",
     "Louse",
-    "Lyrebird",
     "Magpie",
     "Mallard",
     "Manatee",
@@ -140,13 +124,12 @@ var animal_list = [
     "Newt",
     "Nightingale",
     "Octopus",
-    "Okapi",
     "Opossum",
-    "Oryx",
     "Ostrich",
     "Otter",
     "Owl",
     "Oyster",
+    "Panda",
     "Panther",
     "Parrot",
     "Partridge",
@@ -160,22 +143,18 @@ var animal_list = [
     "Porcupine",
     "Porpoise",
     "Quail",
-    "Quelea",
     "Quetzal",
     "Rabbit",
     "Raccoon",
-    "Rail",
     "Ram",
     "Rat",
     "Raven",
-    "Red deer",
     "Red panda",
     "Reindeer",
     "Rhinoceros",
     "Rook",
     "Salamander",
     "Salmon",
-    "Sand Dollar",
     "Sandpiper",
     "Sardine",
     "Scorpion",
@@ -199,7 +178,6 @@ var animal_list = [
     "Swallow",
     "Swan",
     "Tapir",
-    "Tarsier",
     "Termite",
     "Tiger",
     "Toad",
@@ -217,7 +195,6 @@ var animal_list = [
     "Wolf",
     "Wolverine",
     "Wombat",
-    "Woodcock",
     "Woodpecker",
     "Worm",
     "Wren",
@@ -230,28 +207,19 @@ var size = animal_list.length;
 // console.log(animal_list);
 // console.log(size);
 
-function PickRandomWord(frm, frm2) {
-  var rnd = Math.ceil(Math.random() * size);
-  frm.WordBox.value = animal_list[rnd];
+function PickRandomWord(frm) {
+// Generate a random number between 1 and animal_list.length
+var rnd = Math.ceil(Math.random() * size);
+// console.log(animal_list[rnd]);
 
-  var rnd2 = Math.ceil(Math.random() * size);
-  frm2.WordBox_2.value = animal_list[rnd2];
+// Display the word inside the text box
+frm.WordBox.value = animal_list[rnd];
+};
 
-}
-
-// function PickRandomWord(frm) {
-// // Generate a random number between 1 and animal_list.length
-// var rnd = Math.ceil(Math.random() * size);
-// // console.log(animal_list[rnd]);
-//
-// // Display the word inside the text box
-// frm.WordBox.value = animal_list[rnd];
-// };
-//
-// function PickRandomWord_2(frm) {
-// // Generate a random number between 1 and animal_list.length
-// var rnd2 = Math.ceil(Math.random() * size);
-// console.log(animal_list[rnd2]);
-// // Display the word inside the text box
-//   frm.WordBox_2.value = animal_list[rnd2];
-// };
+function PickRandomWord_2(frm) {
+// Generate a random number between 1 and animal_list.length
+var rnd2 = Math.ceil(Math.random() * size);
+console.log(animal_list[rnd2]);
+// Display the word inside the text box
+  frm.WordBox_2.value = animal_list[rnd2];
+};
