@@ -74,8 +74,24 @@ img {
 }
 
 nav {
-  background-color: red;
+  background-color: #4C4B63;
 }
+
+nav a {
+  color: white;
+  text-decoration: none;
+}
+
+#data {
+  background-color: blue;
+  height: 500px;
+}
+
+#reporting {
+  background-color: orange;
+  height: 500px;
+}
+
 
 /* === Caption styles === */
 
