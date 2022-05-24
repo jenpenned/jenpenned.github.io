@@ -10,7 +10,7 @@
   <title>My Website</title>
 
     <!-- Bootstrap Core CSS -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- custom CSS-->
   <link href="css/style.css" rel="stylesheet">
@@ -20,75 +20,98 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="scripts/cursor.js"></script>
+  <script src="scripts/script.js"></script>
 </head>
 
 <body>
   <div class="header">
     <div class='contact-bar'>
       <div class="contact">
-        <a href="mailto:jen.penned@gmail.com"><img src="img/email.jpg" class="contact-icon">
+        <a href="mailto:jen.penned@gmail.com"><img src="img/email.png" class="contact-icon">
         </a>
       </div>
       <div class="contact">
-        <a href="https://twitter.com/jenpenned"><img src="img/twitter.jpg" class="contact-icon"> </a>
+        <a href="https://twitter.com/jenpenned"><img src="img/twitter.png" class="contact-icon"> </a>
       </div>
       <div class="contact">
-        <a href="https://instagram.com/jenpenned"><img src="img/instagram.jpg" class="contact-icon"> </a>
+        <a href="https://instagram.com/jenpenned"><img src="img/instagram.png" class="contact-icon"> </a>
       </div>
     </div>
-  </div>
-
-  <div class='headshot-container'>
-    <div class='headshot'>
-      <img src="img/headshot.jpg" class="" alt="cartoony self-portrait"/>
-    </div>
-    <div class = 'blurb'>
-      <h1 class="center">Jennifer Lu</h1>
-      <p class="flash-text" id="intro">
-      </p>
-      <p>I'm a journalist with a background in biochemistry and a penchant for data and documents. I gravitate towards stories about public health and the environment. In my spare time, I'm probably doodling. </p>
-    </div>
+    <h1 class='head'>Jennifer Lu</h1>
   </div>
 
     <nav>
-      <a href='#data'>Data</a> |
-      <a href='#reporting'>Reporting</a> |
-      <a href='html/doodles.html'>Doodles and whatnot</a>
+      <button id='workButton'>Work</button>
+      <button id= 'playButton'>Play</button>
+      <button id= 'aboutButton'>About me</button>
     </nav>
 
-    <section id='data'>
-      <div class="projects">
-            <div class="item">
-              <figure class="project">
-                <img src="img/lead.png" class="img-responsive" alt="Lead and Copper testing"/>
-                <figcaption>
-                   <h2>Sampling for lead in Columbia's drinking water</h2>
-                   <p>When testing for lead and copper contaminants in the public drinking water, utilities are supposed to take water samples from homes at high risk for lead contamination. Less than 7 percent of water samples taken by the city of Columbia, MO in the last decade came from such homes. </p>
-                   <a href="https://www.columbiamissourian.com/news/local/city-testing-system-not-focused-on-highest-risk-areas-for/article_3a64584a-0f1c-11e7-9343-8b50e97bd6e1.html" target='_blank' ></a>
-                </figcaption>
-              </figure>
-              <div class="project_title">Water Sampling for Lead Contamination</div>
+    <section id='work'>
+      <div class="item">
+        <figure class="project">
+          <img src="img/recalls.jpeg" class="img-responsive" alt="icons showing 179 petitions, 11 recall votes, and 6 recalls"/>
+          <figcaption>
+            <h2>How often do California recalls succeed?</h2>
+            <a href="https://www.latimes.com/projects/california-recall-history-insights-from-elections-petitions/?f#nt=0000016a-0e43-dffa-a76b-3f6bfa3f0001-showMedia-liI0promoMedium-contentFooter" target='_blank' ></a>
+          </figcaption>
+        </figure>
       </div>
 
       <div class="item">
         <figure class="project">
-          <img src="img/lead.png" class="img-responsive" alt="Lead and Copper testing"/>
+          <video width="100%"" autoplay>
+            <source src="img/whale-topper.mp4" type="video/mp4"  alt="drone video of stranded gray whale"/>
+          </video>
           <figcaption>
-             <h2>Sampling for lead in Columbia's drinking water</h2>
-             <p>When testing for lead and copper contaminants in the public drinking water, utilities are supposed to take water samples from homes at high risk for lead contamination. Less than 7 percent of water samples taken by the city of Columbia, MO in the last decade came from such homes. </p>
-             <a href="https://www.columbiamissourian.com/news/local/city-testing-system-not-focused-on-highest-risk-areas-for/article_3a64584a-0f1c-11e7-9343-8b50e97bd6e1.html" target='_blank' ></a>
+             <h2>Something is killing gray whales. Is it a sign of oceans in peril?</h2>
+             <a href="https://www.latimes.com/projects/gray-whale-deaths-how-humans-climate-change-hurt-oceans/#nt=0000016a-0e43-dffa-a76b-3f6bfa3f0001-showMedia-liI5promoMedium-contentFooter" target='_blank' ></a>
           </figcaption>
         </figure>
-        <div class="project_title">Water Sampling for Lead Contamination</div>
+      </div>
+
+      <div class="item">
+        <figure class="project">
+          <img src="img/vaxxy.gif" class="img-responsive" alt="animated anthropomorphic triangle getting vaccinated"/>
+          <figcaption>
+             <h2>You're getting vaccinated! Now what?</h2>
+             <a href="https://www.latimes.com/projects/covid-19-vaccine-timeline-first-second-dose-dos-donts/#nt=0000016a-0e43-dffa-a76b-3f6bfa3f0001-showMedia-liI3promoMedium-contentFooter" target='_blank' ></a>
+          </figcaption>
+        </figure>
+      </div>
+
+
+    </section>
+
+    <section id='play' class=''>
+      <p>lorum ipsum play play play
+      </p>
+      <p>lorum ipsum blah blah blah blah blah
+      </p>
+    </section>
+
+    <section id='about' class=''>
+      <div class='headshot-container'>
+        <div class='headshot'>
+          <img src="img/headshot.png" class="headshot" alt="cartoony self-portrait"/>
+        </div>
+        <div class = 'blurb'>
+          <p class="flash-text" id="intro">
+          </p>
+          <p>I'm a journalist with a background in biochemistry and a penchant for data and documents. I gravitate towards stories about public health and the environment. In my spare time, I'm probably doodling. </p>
+        </div>
       </div>
     </section>
-    <section id='reporting'>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <!-- Include all compiled plugins (below), or include individual files as needed -->
-        <script src="js/bootstrap.min.js"></script>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 </body>
 
 </html>

@@ -8,21 +8,33 @@ body {
   font-size: 21px;
   color: #000000;
   background: #ffffff;
-  max-width: 90%;
+  max-width: 85%;
   margin: auto;
 }
 
 .header {
   width:85%;
-  margin: 30px auto;
+  margin-bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.head {
+  margin-top: 70px;
+  margin-bottom: 40px;
+  font-size: 74px;
+  text-align: center;
+  letter-spacing: 3px;
 }
 
 .headshot-container {
   display: flex;
   justify-content: center;
+  margin: 50px auto;
 }
 
 .headshot {
+  margin-right: 10px;
 }
 
 .blurb {
@@ -39,42 +51,33 @@ body {
   height: 30px;
 }
 
-img {
+.headshot img {
   height: 300px;
 }
 
 .contact-bar {
   display: flex;
   justify-content: center;
+  margin-top: 25px;
 }
 
 .contact {
+  margin: 0px 10px;
 }
 /* email, twitter, instagram icons */
 .contact-icon {
   height: 50px;
-  transition: transform .7s ease-in-out;
+  transition: transform .8s ease-in-out;
 }
 
 .contact-icon:hover {
   transform: rotate(30deg);
 }
 
-.projects {
-  display: flex;
-  width: 80%;
-  margin: auto;
-  flex-flow: row wrap;
-  justify-content: space-around;
-}
-
-.item {
-   flex: 1 300px;
-   padding: 10px;
-}
-
 nav {
   background-color: #4C4B63;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 nav a {
@@ -82,49 +85,74 @@ nav a {
   text-decoration: none;
 }
 
-#data {
+
+#work {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
   background-color: blue;
-  height: 500px;
 }
 
-#reporting {
-  background-color: orange;
-  height: 500px;
+#play {
+  display: none;
+  height: 100%;
 }
 
+#about {
+  display: none;
+  height: 100%;
+}
+
+.projects {
+  width: 100%;
+  margin: auto;
+}
+
+.item {
+  padding: 10px;
+}
 
 /* === Caption styles === */
 
 figure.project {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   color: #fff;
   position: relative;
   float: left;
   overflow: hidden;
   margin: 10px 1%;
-  width: 100%;
   background: #000000;
   text-align: left;
+  background-color: orange;
 }
+
+figure.project img, figure.project video {
+  position: relative;
+  display: relative;
+  object-fit: cover;
+  opacity: 1;
+  width: 100%;
+  height: 220px;
+  -webkit-transition: opacity 0.35s;
+  transition: opacity 0.35s;
+}
+
 figure.project * {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-figure.project img {
-  max-width: 100%;
-  opacity: 1;
-  width: 100%;
-  -webkit-transition: opacity 0.35s;
-  transition: opacity 0.35s;
-}
+
 figure.project figcaption {
   position: absolute;
   bottom: 0;
   left: 0;
-  padding: 30px 5em;
+  padding: 30px 2.2em;
   width: 100%;
   height: 100%;
+  width: 300px;
 }
+
 figure.project figcaption::before {
   position: absolute;
   top: 30px;
@@ -140,6 +168,7 @@ figure.project figcaption::before {
   -webkit-transition-delay: 0.6s;
   transition-delay: 0.6s;
 }
+
 figure.project h2,
 figure.project p {
   margin: 0 0 5px;
@@ -147,25 +176,13 @@ figure.project p {
   -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
   transition: opacity 0.35s,-webkit-transform 0.35s,-moz-transform 0.35s,-o-transform 0.35s,transform 0.35s;
 }
+
 figure.project h2 {
-  word-spacing: -0.15em;
-  font-weight: 300;
+  font-size: 26px;
   text-transform: uppercase;
-  -webkit-transform: translate3d(30%, 0%, 0);
-  transform: translate3d(30%, 0%, 0);
-  -webkit-transition-delay: 0.3s;
-  transition-delay: 0.3s;
+  text-align: left;
 }
-figure.project h2 span {
-  font-weight: 800;
-}
-figure.project p {
-  font-weight: 200;
-  -webkit-transform: translate3d(0%, 30%, 0);
-  transform: translate3d(0%, 30%, 0);
-  -webkit-transition-delay: 0s;
-  transition-delay: 0s;
-}
+
 figure.project a {
   left: 0;
   right: 0;
@@ -184,13 +201,7 @@ figure.project:hover figcaption h2 {
   -webkit-transition-delay: 0.4s;
   transition-delay: 0.4s;
 }
-figure.project:hover figcaption p {
-  opacity: 0.9;
-  -webkit-transform: translate3d(0%, 0%, 0);
-  transform: translate3d(0%, 0%, 0);
-  -webkit-transition-delay: 0.6s;
-  transition-delay: 0.6s;
-}
+
 figure.project:hover figcaption::before {
   background: rgba(255, 255, 255, 0);
   left: 30px;
