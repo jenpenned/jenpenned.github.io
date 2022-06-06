@@ -136,13 +136,18 @@ figure.project {
   text-align: left;
 }
 
+div.imageContainer {
+  width: 330px;
+  height: 220px;
+}
+
 figure.project img, figure.project video {
   position: relative;
   display: relative;
   object-fit: cover;
   opacity: 1;
   width: 100%;
-  height: 220px;
+  height: 100%;
   -webkit-transition: opacity 0.35s;
   transition: opacity 0.35s;
 }
@@ -159,7 +164,6 @@ figure.project figcaption {
   padding: 30px 2.2em;
   width: 100%;
   height: 100%;
-  width: 300px;
 }
 
 figure.project figcaption::before {
