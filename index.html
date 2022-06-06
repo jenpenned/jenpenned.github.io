@@ -44,10 +44,14 @@
   </div>
 
     <nav>
-      <button id='workButton'>Work</button>
-      <button id= 'playButton'>Play</button>
-      <button id= 'aboutButton'>About me</button>
+      <ul>
+        <li id='workButton'>WORK</li>
+        <!-- <li id= 'playButton'>PLAY</li> -->
+        <li id= 'aboutButton'>ABOUT</li>
+      </ul>
     </nav>
+
+<!-- work section begins here -->
 
     <section id='work'>
       <div class="item">
@@ -62,7 +66,7 @@
 
       <div class="item">
         <figure class="project">
-          <video width="100%"" autoplay>
+          <video onloadedmetadata="this.muted = true" playsinline autoplay muted loop>
             <source src="img/whale-topper.mp4" type="video/mp4"  alt="drone video of stranded gray whale"/>
           </video>
           <figcaption>
@@ -81,26 +85,64 @@
           </figcaption>
         </figure>
       </div>
+      <div class="item">
+        <figure class="project">
+          <img src="img/tule-lake.jpeg" class="img-responsive" alt="archival photo of WWII incarceration camp for Japanese Americans"/>
+          <figcaption>
+             <h2>The 'No-Nos' of Tule Lake</h2>
+             <a href="https://www.latimes.com/projects/japanese-americans-incarcerated-us-world-war-ii-camp-speak-out/#nt=0000016a-0e43-dffa-a76b-3f6bfa3f0001-showMedia-liI5promoMedium-contentFooter" target='_blank' ></a>
+          </figcaption>
+        </figure>
+      </div>
 
+      <div class="item">
+        <figure class="project">
+          <img src="img/coronavirus.jpeg" class="img-responsive" alt="coronavirus schema"/>
+          <figcaption>
+             <h2>How Coronaviruses Replicate Inside You</h2>
+             <a href="https://www.latimes.com/projects/how-coronavirus-invade-cells-replicates/" target='_blank' ></a>
+          </figcaption>
+        </figure>
+      </div>
+      <div class="item">
+        <figure class="project">
+          <img src="img/lead.png" class="img-responsive" alt="map of water sampling locations in Columbia, MO"/>
+          <figcaption>
+             <h2>City testing not focused on highest risk areas for lead in water</h2>
+             <a href="https://www.columbiamissourian.com/news/local/city-testing-system-not-focused-on-highest-risk-areas-for-lead-in-water/article_3a64584a-0f1c-11e7-9343-8b50e97bd6e1.html" target='_blank' ></a>
+          </figcaption>
+        </figure>
+      </div>
 
     </section>
 
+<!-- PLAY section begins here -->
+
     <section id='play' class=''>
-      <p>lorum ipsum play play play
-      </p>
-      <p>lorum ipsum blah blah blah blah blah
-      </p>
+      <div class="item">
+        <figure class="project">
+          <div class='thumb-wrapper'>
+            <img src="img/lead.png" class="img-responsive" alt="map of water sampling locations in Columbia, MO"/>
+          </div>
+          <figcaption>
+             <h2>City testing not focused on highest risk areas for lead in water</h2>
+             <a href="https://www.columbiamissourian.com/news/local/city-testing-system-not-focused-on-highest-risk-areas-for-lead-in-water/article_3a64584a-0f1c-11e7-9343-8b50e97bd6e1.html" target='_blank' ></a>
+          </figcaption>
+        </figure>
+      </div>
     </section>
 
     <section id='about' class=''>
-      <div class='headshot-container'>
+      <!-- <div class='headshot-container'>
         <div class='headshot'>
           <img src="img/headshot.png" class="headshot" alt="cartoony self-portrait"/>
-        </div>
+        </div> -->
         <div class = 'blurb'>
           <p class="flash-text" id="intro">
           </p>
-          <p>I'm a journalist with a background in biochemistry and a penchant for data and documents. I gravitate towards stories about public health and the environment. In my spare time, I'm probably doodling. </p>
+          <p>I'm a journalist with a background in biochemistry and an interest in data, documents and investigative reporting. I gravitate towards stories about science, health and the environment.
+
+          When out and about, I like to carry a pocket-sized sketchbook with me. In my spare time, I'm probably doodling or exploring the world through urban sketching.</p>
         </div>
       </div>
     </section>

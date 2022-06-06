@@ -25,6 +25,8 @@ body {
   font-size: 74px;
   text-align: center;
   letter-spacing: 3px;
+  color: #4E937A;
+  font-weight: 900;
 }
 
 .headshot-container {
@@ -75,15 +77,24 @@ body {
 }
 
 nav {
-  background-color: #4C4B63;
   margin-top: 30px;
   margin-bottom: 30px;
+  text-align: center;x
 }
 
-nav a {
-  color: white;
-  text-decoration: none;
+ul {
+  display: block;
 }
+
+li {
+  display: inline-block;
+  border-bottom: 5px;
+  color: #4E937A;
+  font-weight: 900;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
 
 
 #work {
@@ -91,7 +102,6 @@ nav a {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
-  background-color: blue;
 }
 
 #play {
@@ -124,7 +134,6 @@ figure.project {
   margin: 10px 1%;
   background: #000000;
   text-align: left;
-  background-color: orange;
 }
 
 figure.project img, figure.project video {
