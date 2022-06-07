@@ -95,13 +95,12 @@ li {
   margin-right: 1em;
 }
 
-
-
 #work {
   height: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
+  justify-content: space-evenly;
 }
 
 #play {
@@ -122,6 +121,13 @@ li {
 .item {
   padding: 10px;
 }
+
+/*.collapsible {
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+}/*
 
 /* === Caption styles === */
 
@@ -204,8 +210,8 @@ figure.project a {
   position: absolute;
   color: #ffffff;
 }
-figure.project:hover img {
-  opacity: 0.3;
+figure.project:hover img, figure.project:hover video {
+  opacity: 0.4;
 }
 figure.project:hover figcaption h2 {
   opacity: 1;
@@ -221,4 +227,18 @@ figure.project:hover figcaption::before {
   opacity: 1;
   -webkit-transition-delay: 0s;
   transition-delay: 0s;
+}
+
+/* media queries begin here*/
+
+@media screen and (max-width: 1160px) {
+  #work {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 700px) {
+  #work {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
