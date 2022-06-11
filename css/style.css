@@ -37,6 +37,7 @@ body {
 
 .headshot {
   margin-right: 10px;
+  border-radius: 15px;
 }
 
 .blurb {
@@ -90,11 +91,16 @@ li {
   display: inline-block;
   border-bottom: 5px;
   color: #4E937A;
-  font-weight: 900;
   margin-left: 1em;
   margin-right: 1em;
+  padding: 6px;
+  font-weight: 900;
 }
 
+.selected {
+  background: #E5F9E0;
+  border-radius: 10px;
+}
 #work {
   height: 100%;
   display: grid;
@@ -113,121 +119,66 @@ li {
   height: 100%;
 }
 
-.projects {
-  width: 100%;
-  margin: auto;
-}
-
 .item {
   padding: 10px;
-}
-
-/*.collapsible {
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-}/*
-
-/* === Caption styles === */
-
-figure.project {
-  font-family: 'Roboto', sans-serif;
-  color: #fff;
-  position: relative;
-  float: left;
-  overflow: hidden;
-  margin: 10px 1%;
-  background: #000000;
-  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 div.imageContainer {
   width: 330px;
   height: 220px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-figure.project img, figure.project video {
-  position: relative;
-  display: relative;
+div.blurbContainer {
+  width: 330px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.imageContainer img, div.imageContainer video {
+  width: 100%;
+  height: 220px;
   object-fit: cover;
-  opacity: 1;
+};
+
+.collapsible {
+  cursor: pointer;
+  padding: 18px;
   width: 100%;
-  height: 100%;
-  -webkit-transition: opacity 0.35s;
-  transition: opacity 0.35s;
-}
-
-figure.project * {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-figure.project figcaption {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 30px 2.2em;
-  width: 100%;
-  height: 100%;
-}
-
-figure.project figcaption::before {
-  position: absolute;
-  top: 30px;
-  right: 30px;
-  bottom: 30px;
-  left: 100%;
-  border-left: 4px solid rgba(255, 255, 255, 0.8);
-  content: '';
-  opacity: 0;
-  background-color: rgba(255, 255, 255, 0.5);
-  -webkit-transition: all 0.5s;
-  transition: all 0.5s;
-  -webkit-transition-delay: 0.6s;
-  transition-delay: 0.6s;
-}
-
-figure.project h2,
-figure.project p {
-  margin: 0 0 5px;
-  opacity: 0;
-  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
-  transition: opacity 0.35s,-webkit-transform 0.35s,-moz-transform 0.35s,-o-transform 0.35s,transform 0.35s;
-}
-
-figure.project h2 {
-  font-size: 26px;
-  text-transform: uppercase;
+  border: none;
   text-align: left;
+  outline: none;
+  color: #4E937A;
 }
 
-figure.project a {
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  position: absolute;
-  color: #ffffff;
-}
-figure.project:hover img, figure.project:hover video {
-  opacity: 0.4;
-}
-figure.project:hover figcaption h2 {
-  opacity: 1;
-  -webkit-transform: translate3d(0%, 0%, 0);
-  transform: translate3d(0%, 0%, 0);
-  -webkit-transition-delay: 0.4s;
-  transition-delay: 0.4s;
+.collapsible:after{
+  content: '\002B';
 }
 
-figure.project:hover figcaption::before {
-  background: rgba(255, 255, 255, 0);
-  left: 30px;
-  opacity: 1;
-  -webkit-transition-delay: 0s;
-  transition-delay: 0s;
+.active:after {
+  content: "\2212";
 }
+
+.collapse {
+  width: 330px;
+}
+
+.btn.collapsible {
+  color: #4E937A;
+  font-size: 1.5rem;
+  box-shadow: unset;
+}
+
+p.hed {
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
+}
+
+
+/* === Caption styles === */
 
 /* media queries begin here*/
 
