@@ -7,22 +7,21 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>My Website</title>
+  <title>My Portfolio</title>
 
-    <!-- Bootstrap Core CSS -->
+  <!-- Bootstrap Core CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <!-- custom CSS-->
+  <!-- custom CSS-->
   <link href="css/style.css" rel="stylesheet">
 
-  <!-- Custom Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredericka+the+Great&family=Roboto&display=fallback');
+  </style>
 
   <!-- JQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>>
+  <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
   <!-- <script src="scripts/cursor.js"></script> -->
   <script src="scripts/script.js"></script>
 </head>
@@ -46,7 +45,7 @@
 
   <nav>
     <ul>
-      <li id='workButton'>WORK</li>
+      <li id='workButton' class='selected'>WORK</li>
       <li id= 'aboutButton'>ABOUT<li>
     </ul>
   </nav>
@@ -57,7 +56,7 @@
    <div class="item">
      <div class="imageContainer">
        <a href="https://www.latimes.com/projects/california-recall-history-insights-from-elections-petitions/?f#nt=0000016a-0e43-dffa-a76b-3f6bfa3f0001-showMedia-liI0promoMedium-contentFooter" target='_blank' >
-         <img src="img/recalls.jpeg" class="img-responsive" alt="icons showing 179 petitions, 11 recall votes, and 6 recalls"/>
+         <img src="img/recalls.jpeg" class="img-responsive recalls" alt="icons showing 179 petitions, 11 recall votes, and 6 recalls"/>
        </a>
      </div>
      <div class='blurbContainer'>

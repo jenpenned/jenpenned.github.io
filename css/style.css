@@ -1,3 +1,5 @@
+
+
 html {
   position: relative;
   min-height: 100%;
@@ -22,11 +24,12 @@ body {
 .head {
   margin-top: 70px;
   margin-bottom: 40px;
-  font-size: 74px;
+  font-family: 'Fredericka the Great';
+  font-dislay: block;
+  font-size: 110px;
   text-align: center;
   letter-spacing: 3px;
   color: #4E937A;
-  font-weight: 900;
 }
 
 .headshot-container {
@@ -95,6 +98,10 @@ li {
   margin-right: 1em;
   padding: 6px;
   font-weight: 900;
+}
+
+li:hover {
+  cursor: pointer;
 }
 
 .selected {
@@ -177,6 +184,9 @@ p.hed {
   text-transform: uppercase;
 }
 
+img.recalls {
+  border: 2px solid #555;
+}
 
 /* === Caption styles === */
 
@@ -185,6 +195,12 @@ p.hed {
 @media screen and (max-width: 1160px) {
   #work {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .head {
+    font-size: 86px;
   }
 }
 
