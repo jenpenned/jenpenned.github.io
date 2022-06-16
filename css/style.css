@@ -32,19 +32,22 @@ body {
   color: #4E937A;
 }
 
-.headshot-container {
-  display: flex;
+.about-container {
   justify-content: center;
   margin: 50px auto;
+  display: block;
 }
 
-.headshot {
-  margin-right: 10px;
-  border-radius: 15px;
+.headshot-container {
+  height: 300px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+  float:left;
 }
 
-.blurb {
-  margin-left: 10px;
+img.headshot {
+  height: 100%;
+  border-radius: 20px
 }
 
 .center {
@@ -124,6 +127,8 @@ li:hover {
 #about {
   display: none;
   height: 100%;
+  width: 74%;
+  margin: auto;
 }
 
 .item {
@@ -188,6 +193,16 @@ img.recalls {
   border: 2px solid #555;
 }
 
+.sketch-box {
+  width: 600px;
+  height: auto;
+}
+
+img.kit {
+  width: 100%;
+}
+
+
 /* === Caption styles === */
 
 /* media queries begin here*/
@@ -200,12 +215,19 @@ img.recalls {
 
 @media screen and (max-width: 700px) {
   .head {
-    font-size: 86px;
+    font-size: 80px;
   }
 }
 
 @media screen and (max-width: 700px) {
   #work {
     grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .head {
+    font-size: 76px;
+  }
   }
 }
