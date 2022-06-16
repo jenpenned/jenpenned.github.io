@@ -200,9 +200,23 @@ img.recalls {
 
 img.kit {
   width: 100%;
+  border-radius: 15px;
 }
 
+.diptych-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 60px;
+}
 
+.diptych-img {
+  width: 50%;
+}
+
+img.diptych {
+  width: 100%;
+  border-radius: 10px;
+}
 /* === Caption styles === */
 
 /* media queries begin here*/
