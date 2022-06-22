@@ -6,7 +6,7 @@ html {
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto', Helvetica, sans-serif;
   font-size: 21px;
   color: #000000;
   background: #ffffff;
@@ -185,12 +185,19 @@ div.imageContainer img, div.imageContainer video {
 }
 
 p.hed {
-  font-family: 'Roboto', sans-serif;
-  text-transform: uppercase;
+  font-family: 'Roboto Condensed', Helvetica, sans-serif;
+  font-size: 24px;
+  text-transform: capitalize;
+}
+
+p.skills {
+  text-transform: lowercase;
+  color: #5a5766;
+  font-size: 18px;
 }
 
 img.recalls {
-  border: 2px solid #555;
+  border: 2px solid #E5F9E0;
 }
 
 .sketch-box {

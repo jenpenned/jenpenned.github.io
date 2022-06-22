@@ -41,32 +41,40 @@ $(document).ready(function(){
 	$("#workPage").attr("class", "currentPage");
 
   $(".btn-recall").click(function(){
-      $(".recall").collapse('toggle');
-      $(".btn-recall").toggleClass('active');
-    });
+    $(".recall").collapse('toggle');
+    $(".btn-recall").toggleClass('active');
+  });
   $(".btn-whales").click(function(){
-      $(".whales").collapse('toggle');
-      $(".btn-whales").toggleClass('active');
-    });
-    $(".btn-lintel").click(function(){
-      $(".lintel").collapse('toggle');
-      $(".btn-lintel").toggleClass('active');
-    });
-    $(".btn-vaxxy").click(function(){
-      $(".vaxxy").collapse('toggle');
-      $(".btn-vaxxy").toggleClass('active');
-    });
-    $(".btn-tule").click(function(){
-      $(".tule").collapse('toggle');
-      $(".btn-tule").toggleClass('active');
-    });
-    $(".btn-porpoise").click(function(){
-      $(".porpoise").collapse('toggle');
-      $(".btn-porpoise").toggleClass('active');
-    });
-    $(".btn-virus").click(function(){
-      $(".virus").collapse('toggle');
-      $(".btn-virus").toggleClass('active');
-    });
+    $(".whales").collapse('toggle');
+    $(".btn-whales").toggleClass('active');
+  });
+  $(".btn-lintel").click(function(){
+    $(".lintel").collapse('toggle');
+    $(".btn-lintel").toggleClass('active');
+  });
+  $(".btn-vaxxy").click(function(){
+    $(".vaxxy").collapse('toggle');
+    $(".btn-vaxxy").toggleClass('active');
+  });
+  $(".btn-tule").click(function(){
+    $(".tule").collapse('toggle');
+    $(".btn-tule").toggleClass('active');
+  });
+  $(".btn-porpoise").click(function(){
+    $(".porpoise").collapse('toggle');
+    $(".btn-porpoise").toggleClass('active');
+  });
+  $(".btn-virus").click(function(){
+    $(".virus").collapse('toggle');
+    $(".btn-virus").toggleClass('active');
+  });
+  $(".btn-murre").click(function(){
+    $(".murre").collapse('toggle');
+    $(".btn-murre").toggleClass('active');
+  });
+  $(".btn-lead").click(function(){
+    $(".lead").collapse('toggle');
+    $(".btn-lead").toggleClass('active');
+  });
 
 });
