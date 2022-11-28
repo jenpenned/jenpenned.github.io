@@ -40,6 +40,11 @@ $(document).ready(function(){
 	// Make Work page current page
 	$("#workPage").attr("class", "currentPage");
 
+  $(".btn-gslabs").click(function(){
+    $(".gslabs").collapse('toggle');
+    $(".btn-gslabs").toggleClass('active');
+  });
+
   $(".btn-recall").click(function(){
     $(".recall").collapse('toggle');
     $(".btn-recall").toggleClass('active');
