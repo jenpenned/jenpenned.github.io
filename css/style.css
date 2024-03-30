@@ -132,7 +132,6 @@ li:hover {
 }
 
 .item {
-  padding: 10px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -166,11 +165,11 @@ div.imageContainer img, div.imageContainer video {
   color: #4E937A;
 }
 
-.collapsible:after{
+.collapsible:after {
   content: '\002B';
 }
 
-.active:after {
+.collapsible.active:after {
   content: "\2212";
 }
 
@@ -223,6 +222,31 @@ img.kit {
 img.diptych {
   width: 100%;
   border-radius: 10px;
+}
+
+#myCarousel {
+  margin-bottom: 200px;
+}
+
+.carousel-inner {
+  height: 80%;
+}
+
+.carousel-caption {
+  height: 20%;
+  /*padding-top: 40px;*/
+  width: 100%;
+  right: 0%;
+  left: 0%;
+  /*background-color: rgba(255,255,255,0.6);*/
+  color: #000000;
+  text-shadow: none;
+}
+
+.item img {
+  width: 100%;
+  object-fit: contain;
+  height: auto;
 }
 /* === Caption styles === */
 
