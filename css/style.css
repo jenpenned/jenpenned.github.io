@@ -165,11 +165,11 @@ div.imageContainer img, div.imageContainer video {
   color: #4E937A;
 }
 
-.collapsible:after{
+.collapsible:after {
   content: '\002B';
 }
 
-.active:after {
+.collapsible.active:after {
   content: "\2212";
 }
 
@@ -246,6 +246,7 @@ img.diptych {
 .item img {
   width: 100%;
   object-fit: contain;
+  height: auto;
 }
 /* === Caption styles === */
 
