@@ -249,6 +249,20 @@ img.diptych {
   height: auto;
 }
 /* === Caption styles === */
+.carousel-text {
+  width: 100%;
+  text-align: center;
+  padding: 12px 20px;
+}
+
+.carousel-text p {
+  margin: 0;
+  font-family: 'Roboto Condensed', Helvetica, sans-serif;
+  font-size: 18px;
+  color: #000;
+}
+
+
 
 /* media queries begin here*/
 
